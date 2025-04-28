@@ -12,6 +12,11 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: install apt packages
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y zpaq gzip pigz bzip2 pbzip2 xz-utils pixz lzip plzip lrzip lz4 lzop rzip zstd brotli libarchive-tools tar zip p7zip rar cpio wimtools genisoimage
+
       - name: make release
         run: make
 
