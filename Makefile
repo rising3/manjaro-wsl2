@@ -1,6 +1,6 @@
 OUT_ZIP=Manjaro-wsl2.zip
 WSLDL_ZIP=icons.zip
-WSLDL_URL=https://github.com/yuk7/wsldl/releases/download/23072600/$(WSLDL_ZIP)
+WSLDL_URL=https://github.com/yuk7/wsldl/releases/download/25031900/$(WSLDL_ZIP)
 WSLDL_EXE=Manjaro.exe
 
 all: $(OUT_ZIP)
