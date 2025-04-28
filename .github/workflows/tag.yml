@@ -1,0 +1,44 @@
+name: auto-tag
+
+on:
+  schedule:
+    - cron: '0 0 1 * *'
+  workflow_dispatch:
+
+jobs:
+  auto-tag:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get current tag for git
+        id: get_current_tag
+        run: |
+          TAG=$(git tag | sort -r | head -n 1)
+          echo "current_tag=${TAG}" >> $GITHUB_ENV
+
+      - name: Get latest tag for dockerhub
+        id: get_latest_tag
+        run: |
+          TAG=$(curl -s "https://hub.docker.com/v2/repositories/manjarolinux/base/tags/?page_size=5" \
+            | jq -r '.results[].name' \
+            | grep -v '^latest$' \
+            | sort -r \
+            | head -n 1)
+          echo "latest_tag=${TAG}" >> $GITHUB_ENV
+          echo "new_tag=v${TAG}.0.0" >> $GITHUB_ENV
+
+      - name: push new tag
+        id: push_new_tag
+        run: |
+          set -e
+          if [ "${{ env.current_tag }}" != "${{ env.new_tag }}" ]; then
+            git config user.name "github-actions"
+            git config user.email "github-actions@github.com"
+            git tag ${{ env.new_tag }} -m "manjarolinux/base:${{ env.latest_tag }}"
+            git push origin ${{ env.new_tag }}
+          fi
