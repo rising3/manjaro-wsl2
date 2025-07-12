@@ -3,7 +3,8 @@ name: release-and-publish
 on:
   push:
     tags:
-      - 'v*'
+      - v*
+
 jobs:
   build:
     runs-on: ubuntu-latest
